@@ -1,29 +1,12 @@
-This is a super cool website!
+# Lab Reports for CSE 15L at UCSD
 
-# Some awesome markdown syntax now
+[Github](https://github.com/ssemtner/cse15l-lab-reports)
 
-## are you excited yet?
+## Lab Reports
 
-### how about now?
+- [Lab 1](lab1)
 
-> yes
-> I love this
-
-Reasons:
 ---
 
-* yes
-* no
-* maybe
-
-1. do the thing
-![Image](https://ucsd-cse15l-w24.github.io/images/create-repository.png)
-3. write code 
-```
-public static void main (String[] args)
-```
-or better code `fn main()`
-2. **profit**
-
-[edstem](https://edstem.org)
-
+## Other
+- [Markdown syntax examples](syntax)
