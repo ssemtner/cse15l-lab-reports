@@ -4,7 +4,8 @@
 
 ## Lab Reports
 
-- [Lab 1](lab1)
+- [Lab Report 1](labreport1)
+- [Lab Report 2](labreport2)
 
 ---
 
