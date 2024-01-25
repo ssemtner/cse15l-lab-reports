@@ -1,6 +1,7 @@
 # Lab Report 2
 
 ## Part 1
+
 Part 1 involved writing a chat server implementation.
 
 This is the code I came up with:
@@ -92,7 +93,6 @@ The `url` argument will have a value of
 `new URI("http://localhost:4000/add-message?s=this is such a great chat server wow!&user=Someone else")`.
 The `string` field will be equal to `"Scott: Hello!\n"` from the previous request.
 
-
 After the request is completed, the field `string` will be
 `"Scott: Hello!\nSomeone else: this is such a great chat server wow!\n"`;
 
@@ -112,4 +112,5 @@ After the request is completed, the field `string` will be
 
 ## Part 3
 
-Something that I learned ... TODO
+Something that I learned is how to log onto the ieng server.
+Now I know how to use my UCSD account to ssh into ieng6 and access my CSE 15L course specific workspace.
