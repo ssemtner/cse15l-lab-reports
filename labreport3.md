@@ -1,19 +1,137 @@
 # Lab Report 3
 
-## Bugs
+## Part 1: Bugs
 
 In the week 4 lab, we searched for bugs in multiple example programs.
 This is a explanation of one of the bugs in the `merge` method in a `ListExamples` class.
 
-
+### Failure inducing JUnit test
 
 ```java
-// TODO
+// Time out tests after 5 seconds
+@Rule
+public Timeout timeout = Timeout.seconds(5);
+
+@Test
+public void testMerge() {
+    ArrayList<String> input1 = new ArrayList<>();
+    input1.add("apple");
+    input1.add("orange");
+    input1.add("strawberry");
+
+    ArrayList<String> input2 = new ArrayList<>();
+    input2.add("attack");
+    input2.add("battle");
+    input2.add("locate");
+    input2.add("yonder");
+
+    assertArrayEquals(
+            new String[] {
+                "apple",
+                "attack",
+                "battle",
+                "locate",
+                "orange",
+                "strawberry",
+                "yonder"
+            },
+            ListExamples.merge(input1, input2).toArray());
+}
 ```
 
+### JUnit test that passes
 
+```java
+@Test
+public void testMergePasses() {
+    ArrayList<String> input1 = new ArrayList<>();
+    input1.add("apple");
+    input1.add("orange");
+    input1.add("strawberry");
 
-## Grep Options
+    ArrayList<String> input2 = new ArrayList<>();
+    input2.add("attack");
+    input2.add("battle");
+
+    assertArrayEquals(
+            new String[] {
+                "apple", "attack", "battle", "orange", "strawberry"
+            },
+            ListExamples.merge(input1, input2).toArray());
+}
+```
+
+### The symptom
+
+To find the symptom, I ran the both JUnit tests and one timed out.
+That led me to believe there was an infinite loop somewhere in the `merge` method when input1 has more elements than input 2.
+
+![running JUnit tests, the first one fails](images/labreport3_tests_fail.png)
+
+### The bug
+
+The bug turned out to be in a while loop in the `merge` method of `ListExamples`.
+
+```java
+static List<String> merge(List<String> list1, List<String> list2) {
+  List<String> result = new ArrayList<>();
+  int index1 = 0, index2 = 0;
+  while(index1 < list1.size() && index2 < list2.size()) {
+    if(list1.get(index1).compareTo(list2.get(index2)) < 0) {
+      result.add(list1.get(index1));
+      index1 += 1;
+    }
+    else {
+      result.add(list2.get(index2));
+      index2 += 1;
+    }
+  }
+  while(index1 < list1.size()) {
+    result.add(list1.get(index1));
+    index1 += 1;
+  }
+  while(index2 < list2.size()) {
+    result.add(list2.get(index2));
+    index1 += 1; // <-- The bug is here
+  }
+  return result;
+}
+```
+
+In a while loop with a condition depending on index2, the index1 variable is incremented instead of index2.
+When index2 never changes, the while loop will run infinitely, which is what caused the JUnit test to time out.
+
+After fixing the bug, the method is as follows.
+
+```java
+static List<String> merge(List<String> list1, List<String> list2) {
+  List<String> result = new ArrayList<>();
+  int index1 = 0, index2 = 0;
+  while(index1 < list1.size() && index2 < list2.size()) {
+    if(list1.get(index1).compareTo(list2.get(index2)) < 0) {
+      result.add(list1.get(index1));
+      index1 += 1;
+    }
+    else {
+      result.add(list2.get(index2));
+      index2 += 1;
+    }
+  }
+  while(index1 < list1.size()) {
+    result.add(list1.get(index1));
+    index1 += 1;
+  }
+  while(index2 < list2.size()) {
+    result.add(list2.get(index2));
+    index2 += 1; // <-- Changed to index2
+  }
+  return result;
+}
+```
+
+After the fix, all of my JUnit tests pass.
+
+## Part 2: Grep Options
 
 These are some interesting options for `grep`.
 
@@ -30,7 +148,7 @@ This is useful when you are trying to exclude some search term and it would take
 #### Example 1: finding all lines without an "e" in a file
 
 ```
-〉grep -v "e" technical/biomed/cc973.txt
+〉 grep -v "e" technical/biomed/cc973.txt
 
 
 
@@ -61,7 +179,7 @@ Every blank line in the file is part of the output because they have no characte
 #### Example 2: finding files in directory that do not contain an underscore
 
 ```
-〉find technical/government/Media -type f | grep -v "_"
+〉 find technical/government/Media -type f | grep -v "_"
 technical/government/Media/BusinessWire2.txt
 technical/government/Media/GreensburgDailyNews.txt
 technical/government/Media/BusinessWire.txt
@@ -76,7 +194,6 @@ technical/government/Media/CommercialAppealMemphis2.txt
 
 The output of the find command being piped to grep is a long list of files in the `Media` subfolder.
 The `-v` option in grep makes it easy to see what does not contain and `_` character, which could be useful to find one word file names or improperly named files, if you are using snake case.
-
 
 ### Files with matches
 
@@ -102,7 +219,7 @@ which could be useful for performing operations on those files in the future.
 #### Example 2: finding all the files that contain a line ending with a specific pattern
 
 ```
-〉grep -l "[a-z][A-Z][0-9]$" technical/biomed/*.txt
+〉 grep -l "[a-z][A-Z][0-9]$" technical/biomed/*.txt
 technical/biomed/1471-2091-4-5.txt
 technical/biomed/1471-2121-3-15.txt
 technical/biomed/1471-2156-2-5.txt
@@ -138,7 +255,7 @@ This is useful when you want to perform operation on only what you are matching,
 #### Example 1: find 4 letter words that start with "the"
 
 ```
-〉grep -o " the[a-z] " technical/government/Env_Prot_Agen/final.txt
+〉 grep -o " the[a-z] " technical/government/Env_Prot_Agen/final.txt
  they
  them
  they
@@ -156,7 +273,7 @@ A big limitation of this example is that it defines a word as being surrounded b
 #### Example 2: counting the occurences of a word across a directory
 
 ```
-〉grep -o "the" technical/plos/*.txt | wc -l
+〉 grep -o "the" technical/plos/*.txt | wc -l
 27924
 〉
 ```
@@ -166,6 +283,3 @@ That is then piped into `wc -l` to count the number of lines in the output, whic
 
 This is probably not the most efficient way to count the occurences of a word,
 but is works and it a good demonstration of the capabilities of grep.
-
-
-
