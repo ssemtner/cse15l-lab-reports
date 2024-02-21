@@ -283,3 +283,39 @@ That is then piped into `wc -l` to count the number of lines in the output, whic
 
 This is probably not the most efficient way to count the occurences of a word,
 but is works and it a good demonstration of the capabilities of grep.
+
+### Silent mode
+
+*Source: grep man page*
+
+The `-q` or `--quiet` flag makes grep run in quiet mode, which displays no output and conveys the result through a return code (0 for a successful match and otherwise 1).
+Because quiet mode only searches until a match is found, it can make searches faster.
+
+This is useful when you want only want to determine if a match is present at all or when creating bash scripts because it is easy to check the return code.
+
+#### Example 1: using quiet mode when there is a match
+
+```
+〉 grep -q "water" technical/government/Media/water_fees.txt
+〉 echo $?
+0
+〉
+```
+
+This example uses grep with the `-q` option in order to not display any output.
+The return code from grep is then checked with `echo $?`.
+The return code of 0 means that there was at least one occurence of water in the file.
+
+#### Example 2: using quiet mode when there is not a match
+
+```
+〉 grep -q "not there" technical/government/Media/water_fees.txt
+〉 echo $?
+1
+〉
+```
+
+This example also uses grep with the `-q` option in order to not display any output.
+Again, the return code from grep is then checked with `echo $?`.
+The return code of 1 means that there were no occurences of "not there" in the file, which is expected.
+
