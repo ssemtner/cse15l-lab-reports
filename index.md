@@ -6,6 +6,8 @@
 
 - [Lab Report 1](labreport1)
 - [Lab Report 2](labreport2)
+- [Lab Report 3](labreport3)
+- [Lab Report 4](labreport4)
 
 ---
 
