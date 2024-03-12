@@ -8,6 +8,7 @@
 - [Lab Report 2](labreport2)
 - [Lab Report 3](labreport3)
 - [Lab Report 4](labreport4)
+- [Lab Report 5](labreport5)
 
 ---
 
